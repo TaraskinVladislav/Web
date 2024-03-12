@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список дел</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Подключение шрифтов от Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Обновленные стили */
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column; /* Отображение элементов вертикально */
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        label {
+            color: #555;
+        }
+
+        input[type="text"], button {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+            max-width: 400px; /* Максимальная ширина списка */
+            margin: auto; /* Центрирование списка */
+            overflow-y: auto; /* Включаем вертикальный скролл, если элементов больше, чем экран */
+        }
+
+        li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .delete-btn {
+            margin-left: 10px;
+            cursor: pointer;
+            color: red;
+        }
+
+        .date {
+            margin-right: 10px;
+            font-size: 0.8em;
+            color: #777;
+        }
+
+        footer {
+            border-top: 1px solid #ccc;
+            margin-top: 20px;
+            padding-top: 10px;
+            text-align: center;
+        }
+
+        hr {
+            margin: 20px 0;
+            border-color: #ccc;
+        }
+
+        p {
+            color: #777;
+        }
+
+        /* Дополнительные стили для адаптивности */
+
+        @media (max-width: 600px) {
+            button {
+                margin-top: 0;
+            }
+        }
+
+        /* Отцентрировать фразу "Не найдено ни одного дела" по центру экрана */
+        .no-tasks-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>Список дел</h1>
+    
+    <label for="newTask">Новый элемент списка:</label>
+    <input type="text" id="newTask" placeholder="Введите новое дело">
+    <button onclick="addItem()">Создать</button>
+    <button onclick="clearAll()">Очистить всё</button>
+
+    <ul id="taskList">
+        <!-- Сюда будут добавляться элементы списка -->
+    </ul>
+
+    <div class="no-tasks-message" style="display: none;">Не найдено ни одного дела</div>
+
+    <footer>
+        <hr>
+        <p>&copy; 2024 Ваше имя или компания</p>
+    </footer>
+
+    <script>
+        var taskIdCounter = 1;
+        var currentId = 1;
+
+        function addItem() {
+            var newTaskInput = document.getElementById("newTask");
+            var taskList = document.getElementById("taskList");
+            var currentDate = new Date();
+            var formattedDate = currentDate.toLocaleDateString() + " " + currentDate.toLocaleTimeString();
+
+            if (newTaskInput.value.trim() !== "") {
+                var newTask = document.createElement("li");
+                newTask.id = "task" + currentId;
+                
+                newTask.innerHTML = `
+                    <span class="date">${formattedDate}</span>
+                    <span>${currentId}.</span>
+                    <input type="checkbox" id="chk${currentId}">
+                    <label for="chk${currentId}">${newTaskInput.value}</label>
+                    <span class="delete-btn" onclick="deleteTask(${currentId})">&#10060;</span>
+                `;
+
+                taskList.appendChild(newTask);
+                newTaskInput.value = "";
+                currentId++;
+
+                // Отображение/скрытие фразы "Не найдено ни одного дела"
+                document.querySelector('.no-tasks-message').style.display = "none";
+            }
+        }
+
+        function deleteTask(taskId) {
+            var taskToRemove = document.getElementById("task" + taskId);
+            taskToRemove.remove();
+            
+            // Отображение фразы "Не найдено ни одного дела", если список пуст
+            if (document.getElementById("taskList").childElementCount === 0) {
+                document.querySelector('.no-tasks-message').style.display = "block";
+            }
+        }
+
+        function clearAll() {
+            var taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+            currentId = 1; // Сброс счетчика при очистке списка
+
+            // Отображение фразы "Не найдено ни одного дела"
+            document.querySelector('.no-tasks-message').style.display = "block";
+        }
+    </script>
+</body>
+</html>

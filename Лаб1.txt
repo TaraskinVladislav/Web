@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список дел</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+       body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .delete-btn {
+            margin-left: 10px;
+            cursor: pointer;
+            color: red;
+        }
+
+        .date {
+            margin-right: 10px;
+            font-size: 0.8em;
+            color: #777;
+        }
+
+        footer {
+            border-top: 1px solid #ccc;
+            margin-top: 20px;
+            padding-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Список дел</h1>
+    
+    <label for="newTask">Новый элемент списка:</label>
+    <input type="text" id="newTask" placeholder="Введите новое дело">
+    <button onclick="addItem()">Создать</button>
+    <button onclick="clearAll()">Очистить всё</button>
+
+    <ul id="taskList">
+        <!-- Сюда будут добавляться элементы списка -->
+    </ul>
+
+    <footer>
+        <hr>
+        <p>&copy; 2024 Тараскин Владислав, 2207са1</p>
+    </footer>
+
+    <script>
+        var taskIdCounter = 1;
+
+        function addItem() {
+            var newTaskInput = document.getElementById("newTask");
+            var taskList = document.getElementById("taskList");
+            var currentDate = new Date();
+            var formattedDate = currentDate.toLocaleDateString() + " " + currentDate.toLocaleTimeString();
+
+            if (newTaskInput.value.trim() !== "") {
+                var newTask = document.createElement("li");
+                newTask.id = "task" + taskIdCounter;
+                
+                newTask.innerHTML = `
+                    <span class="date">${formattedDate}</span>
+                    <span>${taskIdCounter}.</span>
+                    <input type="checkbox" id="chk${taskIdCounter}">
+                    <label for="chk${taskIdCounter}">${newTaskInput.value}</label>
+                    <span class="delete-btn" onclick="deleteTask(${taskIdCounter})">&#10060;</span>
+                `;
+
+                taskList.appendChild(newTask);
+                newTaskInput.value = "";
+                taskIdCounter++;
+            }
+        }
+
+        function deleteTask(taskId) {
+            var taskToRemove = document.getElementById("task" + taskId);
+            taskToRemove.remove();
+            
+            // Обновление нумерации после удаления
+            var tasks = document.getElementById("taskList").children;
+            for (var i = 0; i < tasks.length; i++) {
+                tasks[i].querySelector('span:not(.date)').textContent = (i + 1) + '.';
+            }
+        }
+
+        function clearAll() {
+            var taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+            taskIdCounter = 1; // Сброс счетчика при очистке списка
+        }
+    </script>
+</body>
+</html>

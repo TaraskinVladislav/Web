@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список дел</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <!-- Подключение шрифтов от Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Обновленные стили */
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column; /* Отображение элементов вертикально */
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #1e2a38; /* Темно-синий фон */
+            color: #fff; /* Белый текст */
+            background-image: url('background.jpg');
+            background-size: cover; /* Адаптация изображения */
+        }
+        .no-tasks-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #777;
+    display: none; /* Начальное скрытие элемента */
+}
+
+
+        h1 {
+            color: #fff;
+        }
+
+        label {
+            color: #ccc;
+        }
+
+        #input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex: 1; /* Занимает все доступное пространство, чтобы кнопки были справа */
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: auto; /* Автоматическая ширина кнопок */
+            margin-left: 10px; /* Расстояние между кнопками */
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;;
+        }
+
+        button:hover {
+    background-color: darken($primary-color, 10%);
+    transform: scale(1.1);
+}
+
+
+        button.clear-btn {
+            background-color: #ff5555; /* Красный цвет */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+            max-width: 400px; /* Максимальная ширина списка */
+            margin: auto; /* Центрирование списка */
+            overflow-y: auto; /* Включаем вертикальный скролл, если элементов больше, чем экран */
+        }
+
+       li {
+white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    color: #000; /* Черный текст внутри элементов списка */
+}
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .delete-btn {
+    margin-left: 10px;
+    cursor: pointer;
+    color: #f00; /* Красный цвет для крестика */
+}
+.decorative-font {
+    font-family: 'Great Vibes', cursive;
+}
+
+        .date {
+            margin-right: 10px;
+            font-size: 0.8em;
+            color: #777;
+        }
+
+        footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+   text-align: center;
+        }
+
+        hr {
+            margin: 20px 0;
+            border-color: #ccc;
+        }
+
+        p {
+            color: #777;
+        }
+
+        /* Дополнительные стили для адаптивности */
+
+        @media (max-width: 768px) {
+            button {
+                margin-top: 0;
+            }
+            body {
+        background-image: url('background-mobile.jpg');
+           }
+        }
+
+        /* Отцентрировать фразу "Не найдено ни одного дела" по центру экрана */
+        .no-tasks-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="decorative-font">Список дел</h1>
+    
+    <div id="input-container">
+    <input type="text" id="newTask" placeholder="Новый элемент списка">
+    <button onclick="addItem()">Создать</button>
+    <button class="clear-btn" onclick="clearAll()">Очистить всё</button>
+</div>
+
+    <ul id="taskList">
+        <!-- Сюда будут добавляться элементы списка -->
+    </ul>
+
+    <div class="no-tasks-message">Не найдено ни одного дела</div>
+
+    <footer>
+        <hr>
+        <p>&copy; 2024 Тараскин Владислав, 2207са1</p>
+    </footer>
+
+    <script>
+        var taskIdCounter = 1;
+        var currentId = 1;
+
+        function addItem() {
+    var newTaskInput = document.getElementById("newTask");
+    var taskList = document.getElementById("taskList");
+    var currentDate = new Date();
+    var formattedDate = currentDate.toLocaleDateString() + " " + currentDate.toLocaleTimeString();
+
+    if (newTaskInput.value.trim() !== "") {
+        var newTask = document.createElement("li");
+        newTask.id = "task" + currentId;
+
+        newTask.innerHTML = `
+            <span class="date">${formattedDate}</span>
+            <span>${currentId}.</span>
+            <input type="checkbox" id="chk${currentId}">
+            <label for="chk${currentId}">${newTaskInput.value}</label>
+            <span class="delete-btn" onclick="deleteTask(${currentId})">&#10060;</span>
+        `;
+
+        taskList.appendChild(newTask);
+        newTaskInput.value = "";
+        currentId++;
+
+        // Скрытие фразы "Не найдено ни одного дела"
+        document.querySelector('.no-tasks-message').style.display = "none";
+    } else {
+        // Отображение фразы "Не найдено ни одного дела" при пустом вводе
+        document.querySelector('.no-tasks-message').style.display = "block";
+    }
+}
+
+        function deleteTask(taskId) {
+            var taskToRemove = document.getElementById("task" + taskId);
+            taskToRemove.remove();
+            
+            // Обновление нумерации после удаления
+            updateTaskNumbers();
+
+            // Отображение фразы "Не найдено ни одного дела", если список пуст
+            if (document.getElementById("taskList").childElementCount === 0) {
+                document.querySelector('.no-tasks-message').style.display = "block";
+            }
+        }
+
+        function clearAll() {
+            var taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+            currentId = 1; // Сброс счетчика при очистке списка
+
+            // Отображение фразы "Не найдено ни одного дела"
+            document.querySelector('.no-tasks-message').style.display = "block";
+        }
+
+        function updateTaskNumbers() {
+            var tasks = document.getElementById("taskList").children;
+            for (var i = 0; i < tasks.length; i++) {
+                tasks[i].querySelector('span:nth-child(2)').innerText = i + 1 + ".";
+            }
+        }
+    </script>
+</body>
+</html>
+
