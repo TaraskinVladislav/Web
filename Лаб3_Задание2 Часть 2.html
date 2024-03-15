@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Задание 2</title>
+</head>
+<body>
+<script>
+function firstUniqueCharacter(str) {
+  for (let i = 0; i < str.length; i++) {
+    if (str.indexOf(str[i]) === str.lastIndexOf(str[i])) {
+      return str[i];
+    }
+  }
+  return null;
+}
+
+console.log(firstUniqueCharacter('фывфавыапрс')); // Выведет 'п'
+function generateRandomString(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
+console.log(generateRandomString(5)); 
+function uniqueCharacters(str) {
+  let unique = '';
+  for (let char of str) {
+    if (str.indexOf(char) === str.lastIndexOf(char)) {
+      unique += char;
+    }
+  }
+  return unique;
+}
+
+  document.write("<p>Самый первый неповторяющийся символ в строке: " + firstUniqueCharacter('фывфавыапрс') + "</p>");
+  document.write("<p>Сгенерированная строка: " + generateRandomString(5) + "</p>");
+  document.write("<p>Уникальные символы в строке: " + uniqueCharacters('позволяеткопироватьтекстиз') + "</p>");
+
+</script>
+</body>
+</html>

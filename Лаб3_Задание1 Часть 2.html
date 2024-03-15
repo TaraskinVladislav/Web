@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Задание1</title>
+</head>
+<body>
+
+<script>
+  function reverseNumber(num) {
+    return parseInt(num.toString().split("").reverse().join(""));
+  }
+
+  function removeDuplicates(num) {
+    let numString = num.toString();
+    let result = "";
+
+    for (let i = 0; i < numString.length; i++) {
+      if (numString.indexOf(numString[i]) === i) {
+        result += numString[i];
+      }
+    }
+
+    return parseInt(result);
+  }
+  function countDigitOccurrences(num, digit) {
+    let count = 0;
+    let numString = num.toString();
+    let digitString = digit.toString();
+
+    for (let i = 0; i < numString.length; i++) {
+      if (numString[i] === digitString) {
+        count++;
+      }
+    }
+
+    return count;
+  }
+
+  function longestSequenceOfOnesOrZeros(num, digit) {
+    let binaryString = num.toString(2);
+    let longestSequence = 0;
+    let currentSequence = 0;
+
+    for (let i = 0; i < binaryString.length; i++) {
+      if (binaryString[i] === digit.toString()) {
+        currentSequence++;
+        if (currentSequence > longestSequence) {
+          longestSequence = currentSequence;
+        }
+      } else {
+        currentSequence = 0;
+      }
+    }
+
+    return longestSequence;
+  }
+
+  document.write("Число в обратном порядке: " + reverseNumber(123) + "<br>");
+  document.write("Число без повторяющихся цифр: " + removeDuplicates(111333456) + "<br>");
+  document.write("Количество вхождений цифры: " + countDigitOccurrences(1355567, 5) + "<br>");
+  document.write("Самая длинная последовательность нулей/единиц: " + longestSequenceOfOnesOrZeros(100111000111001111, 1) + "<br>");
+</script>
+</body>
+</html>
